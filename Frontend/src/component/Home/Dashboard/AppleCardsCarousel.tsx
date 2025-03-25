@@ -1,5 +1,6 @@
+import { motion } from "framer-motion";
 import { UserAuth } from "../../../content/usersContext";
-import { Card, Carousel } from "../../ui/apple-cards-carousel";
+import { Card, CardsVartiant, Carousel } from "../../ui/apple-cards-carousel";
 
 export function AppleCardsCarouselDemo() {
   const cards = data.map((card, index) => (
@@ -9,8 +10,20 @@ export function AppleCardsCarouselDemo() {
 
   return (
     <div className="w-full h-full pt-12">
-      <h2 className="max-w-7xl pl-1 mx-auto capitalize text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-        welcome back, {user && user.firstName}
+      <h2 className="max-w-7xl items-center flex flex-wrap flex-row pl-1 mx-auto capitalize text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+        {/* {user && user.firstName} */}
+        welcome back,&nbsp;
+        {Array.from(user && user.firstName).map((text: any, index: any) => (
+          <motion.h1
+            variants={CardsVartiant(index, 0.3)}
+            whileInView={"show"}
+            className="capitalize"
+            initial="hidden"
+            viewport={{ once: false, amount: 0.2 }}
+          >
+            {text === " " ? `\u00A0` : text}
+          </motion.h1>
+        ))}
       </h2>
       <Carousel items={cards} />
     </div>

@@ -59,12 +59,26 @@ const PostCollection = () => {
       setfilteredPosts(filterPosts(posts, categorates));
     }
   }, [categorates, posts, search, sort]);
+  const vartiant = {
+    hidden: {
+      y: 90,
+      opacity: 0,
+      transition: { type: "spring", duration: 1, delay: 0.3 },
+    },
+    show: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", duration: 2.2, delay: 0.5, stiffness: 110 },
+    },
+  };
 
   return (
     <motion.div
-      initial={{ y: 80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1.5, delay: 0.5 }}
+      variants={vartiant}
+      initial="hidden"
+      whileInView={"show"}
+      viewport={{ once: false, amount: 0.25 }}
+      className="w-full h-full relative"
     >
       <div className="mx-2  my-5 w-full h-auto">
         {user && userRole === "bloggers" && (
@@ -128,68 +142,78 @@ const PostCollection = () => {
           </div>
         </div>
 
-        <div className="w-full h-auto">
+        <div className="w-full h-full relative">
           {isloading ? (
             <BlogZoneLoader className="min-h-[30vh] mt-[100px]" />
           ) : (
             <div className="flex flex-wrap  gap-x-1 gap-y-6 w-full h-auto p-1 max-[500px]:justify-center justify-evenly lg:justify-start lg:gap-x-5">
               {filteredPosts.map((Post: any, index: number) => (
-                <div
-                  key={index}
-                  className="lg:w-[350px] max-[670px]:w-[450px] w-[500px] drop-shadow-lg shadow shadow-slate-400 px-2 h-auto py-3 rounded-lg"
+                <motion.div
+                  variants={PostVartiant(index)}
+                  initial="hidden"
+                  whileInView={"show"}
+                  viewport={{ once: false, amount: 0.25 }}
                 >
-                  <div className="w-full h-full relative flex flex-col">
-                    (
-                    <img
-                      src={Post.imageUrl}
-                      alt={Post.title}
-                      className="w-full rounded-lg h-50"
-                    />
-                    )
-                    <p className="w-auto absolute top-3 left-2 px-2 py-2 h-auto bg-neutral-800/60 rounded-3xl text-center text-white/85 font-medium text-[12px] capitalize">
-                      {Post.categorate}
-                    </p>
-                    <p className="text-neutral-400 font-medium mt-1">
-                      {moment(Post.createdDate).format("Do MMM YYYY, h:mm a")}
-                    </p>
-                    <Link to={`/PostContent/${Post._id}`} className="lg:hidden">
-                      <h2 className="font-semibold hover:underline mt-1 duration-300 text-black transition text-xl hover:font-bold dark:text-white">
-                        {Post.title.length >= 50
-                          ? Post.title.slice(0, 50) + " " + "..."
-                          : Post.title}
-                      </h2>
-                    </Link>
-                    <Link
-                      to={`/PostContent/${Post._id}`}
-                      className="max-md:hidden"
-                    >
-                      <h2 className="font-semibold hover:underline mt-1 duration-300 text-black transition text-xl hover:font-bold dark:text-white">
-                        {Post.title.length >= 30
-                          ? Post.title.slice(0, 30) + " " + "..."
-                          : Post.title}
-                      </h2>
-                    </Link>
-                    <p className="font-medium text-neutral-500 mb-3">
-                      {Post.postMessage.length >= 120
-                        ? Post.postMessage.slice(0, 120) + " " + "..."
-                        : Post.postMessage}
-                    </p>
-                    <div className="flex items-center gap-2">
+                  <div
+                    key={index}
+                    className="lg:w-[350px] max-[670px]:w-[450px] min-w-[500px] drop-shadow-lg  shadow shadow-slate-400 px-2 h-auto py-3 rounded-lg w-full"
+                  >
+                    <div className="w-full h-full relative flex flex-col">
+                      (
                       <img
-                        src={
-                          Post.createdBy && Post.createdBy.imageUrl.secure_url
-                        }
-                        alt={Post.createdBy && Post.createdBy.lastName}
-                        className="size-8 rounded-full bg-white"
+                        src={Post.imageUrl}
+                        alt={Post.title}
+                        className="w-full rounded-lg min-h-50 h-full"
                       />
-                      <span className="font-semibold text-black dark:text-white">
-                        {Post.createdBy &&
-                          Post.createdBy.firstName + " " + Post.createdBy &&
-                          Post.createdBy.lastName}
-                      </span>
+                      )
+                      <p className="w-auto absolute top-3 left-2 px-2 py-2 h-auto bg-neutral-800/60 rounded-3xl text-center text-white/85 font-medium text-[12px] capitalize">
+                        {Post.categorate}
+                      </p>
+                      <p className="text-neutral-400 font-medium mt-1">
+                        {moment(Post.createdDate).format("Do MMM YYYY, h:mm a")}
+                      </p>
+                      <Link
+                        to={`/PostContent/${Post._id}`}
+                        className="lg:hidden"
+                      >
+                        <h2 className="font-semibold hover:underline mt-1 duration-300 text-black transition text-xl hover:font-bold dark:text-white">
+                          {Post.title.length >= 50
+                            ? Post.title.slice(0, 50) + " " + "..."
+                            : Post.title}
+                        </h2>
+                      </Link>
+                      <Link
+                        to={`/PostContent/${Post._id}`}
+                        className="max-md:hidden"
+                      >
+                        <h2 className="font-semibold hover:underline mt-1 duration-300 text-black transition text-xl hover:font-bold dark:text-white">
+                          {Post.title.length >= 30
+                            ? Post.title.slice(0, 30) + " " + "..."
+                            : Post.title}
+                        </h2>
+                      </Link>
+                      <p className="font-medium text-neutral-500 mb-3">
+                        {Post.postMessage.length >= 120
+                          ? Post.postMessage.slice(0, 120) + " " + "..."
+                          : Post.postMessage}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={
+                            Post.createdBy && Post.createdBy.imageUrl.secure_url
+                          }
+                          alt={Post.createdBy && Post.createdBy.lastName}
+                          className="size-8 rounded-full bg-white"
+                        />
+                        <span className="font-semibold text-black dark:text-white">
+                          {Post.createdBy &&
+                            Post.createdBy.firstName + " " + Post.createdBy &&
+                            Post.createdBy.lastName}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
               {filteredPosts.length === 0 && (
                 <PostNotFound title={categorates} />
@@ -203,3 +227,24 @@ const PostCollection = () => {
 };
 
 export default PostCollection;
+
+export const PostVartiant = (index: any) => ({
+  hidden: {
+    opacity: 0,
+    x: -50,
+    transition: {
+      duration: 1,
+    },
+  },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring",
+      duration: 1,
+      delay: 0.8 * index,
+      damping: 8,
+      ease: "easeOut",
+    },
+  },
+});

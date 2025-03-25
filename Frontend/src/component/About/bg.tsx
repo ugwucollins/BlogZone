@@ -13,9 +13,11 @@ import { Input } from "../auth/SignUp/input";
 // import { toast } from "react-toastify";
 // import Api from "../../Axios/Api";
 import { UserAuth } from "../../content/usersContext";
+import { CardsVartiant } from "../ui/apple-cards-carousel";
 
 export function AuroraBackgroundDemo() {
   const [open, setOpen] = useState(false);
+  const AboutWord = "contact our friendly team";
   return (
     <AuroraBackground>
       <motion.div
@@ -28,11 +30,20 @@ export function AuroraBackgroundDemo() {
         }}
         className="relative flex flex-col gap-2 items-center justify-center px-4"
       >
-        <div className="text-3xl md:text-5xl capitalize font-bold dark:text-white text-center">
-          contact our friendly team
+        <div className="text-3xl flex md:text-4xl lg:text-5xl flex-wrap justify-center w-full capitalize font-bold dark:text-white text-center">
+          {Array.from(AboutWord).map((text: any, index: any) => (
+            <motion.h1
+              variants={CardsVartiant(index, 0.1)}
+              whileInView={"show"}
+              initial="hidden"
+              viewport={{ once: false, amount: 0.2 }}
+            >
+              {text === " " ? `\u00A0` : text}
+            </motion.h1>
+          ))}
         </div>
         <div className="text-base md:text-xl dark:text-neutral-300 mb-5">
-          Let us know how we can help you
+          Let us know how we &nbsp; can help you
         </div>
 
         <div className="mt-7">

@@ -108,20 +108,10 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
           >
             {items.map((item, index) => (
               <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 0.5,
-                    delay: 0.2 * index,
-                    ease: "easeOut",
-                    once: true,
-                  },
-                }}
+                variants={CardsVartiant(index, 0.5)}
+                whileInView={"show"}
+                initial="hidden"
+                viewport={{ once: false, amount: 0.25 }}
                 key={"card" + index}
                 className="last:pr-[5%] md:last:pr-[33%]  rounded-3xl"
               >
@@ -150,6 +140,27 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
     </CarouselContext.Provider>
   );
 };
+
+export const CardsVartiant = (index: any, de: any) => ({
+  hidden: {
+    opacity: 0,
+    y: 25,
+    transition: {
+      duration: 1,
+    },
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      duration: 1,
+      delay: de * index,
+      damping: 8,
+      ease: "easeOut",
+    },
+  },
+});
 
 export const Card = ({
   card,

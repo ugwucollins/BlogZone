@@ -33,7 +33,6 @@ app.get("/", (req, res) => {
   res.send({ Hello: "message" });
 });
 
-// app.use(`/${API_URL}`, router);
 app.use(`/${USERS_API_URL}`, usersRouter);
 app.use(`/${POSTS_API_URL}`, postsRouter);
 app.use(`/${COMMENTS_API_URL}`, commentsRouter);
