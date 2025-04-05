@@ -42,6 +42,11 @@ const UserDetils = () => {
               </p>
               <p className=" mb-2">LastName:</p>
               <p className="">Email:</p>
+              <p className="">
+                {user && user.followers.length <= 1
+                  ? "Follower:"
+                  : "Followers:"}
+              </p>
               <p className=" mt-2">Role:</p>
               <p className=" mt-2">Create Post:</p>
               <p className=" mt-2">CreatedDate:</p>
@@ -64,6 +69,12 @@ const UserDetils = () => {
 
               <div className="">
                 <p className="text-lg font-normal">{user && user.email}</p>
+                <div className="mx-1 border border-gray-300 w-[95%]" />
+              </div>
+              <div className="">
+                <p className="text-lg font-normal">
+                  {user && user.followers.length}
+                </p>
                 <div className="mx-1 border border-gray-300 w-[95%]" />
               </div>
 

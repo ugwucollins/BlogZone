@@ -20,6 +20,7 @@
     "@tsparticles/slim": "^3.5.0",
     "@vitejs/plugin-react": "^4.3.3",
     "axios": "^1.7.2",
+    "caniuse-lite": "^1.0.30001710",
     "chart.js": "^4.4.7",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",

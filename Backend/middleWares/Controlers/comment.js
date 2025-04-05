@@ -1,11 +1,15 @@
 import "dotenv/config";
 import commentModels from "../../models/comment.js";
+import postModels from "../../models/posts.js";
 
 // const { JSONKEY } = process.env;
 
 export const getHandler = async (req, res) => {
   try {
-    const response = await commentModels.find().populate("commentedBy");
+    const response = await commentModels
+      .find({})
+      .populate("commentedBy", "firstName lastName email followers imageUrl")
+      .populate("PostId", "_id");
     if (response.length === 0) {
       res.status(404).json({ message: "NO Comment found" });
     } else {
@@ -24,7 +28,8 @@ export const getByIdHandler = async (req, res, next) => {
   try {
     const response = await commentModels
       .findById({ _id: id })
-      .populate("commentedBy");
+      .populate("commentedBy")
+      .populate("PostId");
     if (!response) {
       res.status(404).json({ message: "Comment id Not found" });
     } else {
@@ -36,8 +41,9 @@ export const getByIdHandler = async (req, res, next) => {
     next(err);
   }
 };
+
 export const commentHandler = async (req, res, next) => {
-  const { text, commentedBy, imageUrl } = req.body;
+  const { text, commentedBy, imageUrl, PostId } = req.body;
 
   try {
     const existingComment = await commentModels.findOne({ text: text });
@@ -50,16 +56,23 @@ export const commentHandler = async (req, res, next) => {
         text: text,
         commentedBy: commentedBy,
         imageUrl: imageUrl,
+        PostId: PostId,
       };
       console.log({ data: data });
 
       const newcomment = await commentModels.create(data);
-      const comments = await newcomment.save();
+      const response = await postModels.findById(PostId);
+      const comment = await newcomment.save();
+      response.comment.push(comment._id);
+      const result = await response.save();
+
       const message = "Comment Created Succesfully";
       console.log(message);
-      res
-        .status(201)
-        .json({ message: message, success: true, comments: comments });
+      res.status(201).json({
+        message: message,
+        success: true,
+        comments: comment,
+      });
     }
   } catch (error) {
     const err = "Error! Something went wrong.";

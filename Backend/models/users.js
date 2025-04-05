@@ -18,7 +18,14 @@ const userSchema = new mongoose.Schema(
     theme: { type: Boolean, default: false },
     postRequest: { type: Boolean, default: false, require: true },
     roleRequest: { type: Boolean, default: false, require: true },
-    imageUrl: String,
+    // imageUrl: String,
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+        require: true,
+      },
+    ],
     imageUrl: {
       type: Object,
       default: {

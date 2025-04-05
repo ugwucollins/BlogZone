@@ -1,18 +1,23 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { filterPosts, usePost } from "./postsContext";
 import { AdminUrl } from "../../content/Types";
 import { PostNotFound } from "../Not-Found";
 import { cn } from "../../lib/utils";
 import { motion } from "framer-motion";
-import { PlusIcon } from "lucide-react";
+import { HeartIcon, PlusIcon } from "lucide-react";
 import { UserAuth } from "../../content/usersContext";
 import { BlogZoneLoader } from "../../content/loading";
+import { CardsVartiant } from "../ui/apple-cards-carousel";
+import { IconHeartFilled } from "@tabler/icons-react";
+import { toast } from "react-toastify";
+import Api from "../../Axios/Api";
 
 const PostCollection = () => {
   const [categorates, setcategorates] = useState("");
   const [sort, setsort] = useState("");
+  const router = useNavigate();
   const { user, userRole }: any = UserAuth();
   const [selectedIndex, setselectedIndex] = useState(0);
   const [filteredPosts, setfilteredPosts] = useState([]);
@@ -41,8 +46,29 @@ const PostCollection = () => {
   ];
 
   const { posts, isloading, search }: any = usePost();
-  console.log(posts);
-  console.log(filteredPosts);
+
+  const Likes = (post: any) => {
+    return post.likes.find((post: any) => post._id === user._id);
+  };
+
+  const LikePostHandler = async (_id: any, push: boolean) => {
+    const data = {
+      userId: user._id,
+      islike: push,
+    };
+
+    try {
+      const res = await Api.put(`/posts/like/${_id}`, data);
+      const isLike = res.data;
+      if (isLike.success) {
+        toast.success(isLike.message);
+      }
+      // seteachUserPost(isLike.post);
+    } catch (error: any) {
+      console.log(error);
+      toast.error("opps! something went wrong, Try again later");
+    }
+  };
 
   const newest = () =>
     setfilteredPosts(
@@ -90,8 +116,17 @@ const PostCollection = () => {
             </div>
           </Link>
         )}
-        <h1 className="text-3xl font-bold mb-1 text-black dark:text-white">
-          Blogs
+        <h1 className="text-3xl lg:text-5xl flex flex-row flex-wrap items-center font-bold mb-1 text-black dark:text-white">
+          {Array.from("Blogs").map((text: any, index: any) => (
+            <motion.h1
+              variants={CardsVartiant(index, 0.2)}
+              whileInView={"show"}
+              initial="hidden"
+              viewport={{ once: false, amount: 0.2 }}
+            >
+              {text === " " ? `\u00A0` : text}
+            </motion.h1>
+          ))}
         </h1>
 
         <p className="text-neutral-500 dark:text-white/90 mb-2 w-full">
@@ -174,7 +209,7 @@ const PostCollection = () => {
                       </p>
                       <Link
                         to={`/PostContent/${Post._id}`}
-                        className="lg:hidden"
+                        className="lg:hidden block"
                       >
                         <h2 className="font-semibold hover:underline mt-1 duration-300 text-black transition text-xl hover:font-bold dark:text-white">
                           {Post.title.length >= 50
@@ -184,7 +219,7 @@ const PostCollection = () => {
                       </Link>
                       <Link
                         to={`/PostContent/${Post._id}`}
-                        className="max-md:hidden"
+                        className="md:hidden lg:block hidden"
                       >
                         <h2 className="font-semibold hover:underline mt-1 duration-300 text-black transition text-xl hover:font-bold dark:text-white">
                           {Post.title.length >= 30
@@ -197,19 +232,67 @@ const PostCollection = () => {
                           ? Post.postMessage.slice(0, 120) + " " + "..."
                           : Post.postMessage}
                       </p>
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={
-                            Post.createdBy && Post.createdBy.imageUrl.secure_url
-                          }
-                          alt={Post.createdBy && Post.createdBy.lastName}
-                          className="size-8 rounded-full bg-white"
-                        />
-                        <span className="font-semibold text-black dark:text-white">
-                          {Post.createdBy &&
-                            Post.createdBy.firstName + " " + Post.createdBy &&
-                            Post.createdBy.lastName}
-                        </span>
+                      <div className="w-full flex justify-between flex-row">
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={
+                              Post.createdBy &&
+                              Post.createdBy.imageUrl.secure_url
+                            }
+                            alt={Post.createdBy && Post.createdBy.lastName}
+                            className="size-8 rounded-full bg-white"
+                          />
+                          <span className="font-semibold text-black dark:text-white">
+                            {Post.createdBy &&
+                              Post.createdBy.firstName + " " + Post.createdBy &&
+                              Post.createdBy.lastName}
+                          </span>
+                        </div>
+
+                        {!user ? (
+                          <>
+                            <div className="mr-4 flex gap-2 items-center cursor-pointer dark:text-white font-bold">
+                              <span className="font-bold">
+                                {Post.likes.length}{" "}
+                                {Post.likes.length >= 1 ? "Like" : "Likes"}
+                              </span>
+                              <HeartIcon
+                                onClick={() => router("/auth/login")}
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {Likes(Post) ? (
+                              <div className="mr-4 flex gap-2 items-center cursor-pointer  font-bold">
+                                <span className="font-bold dark:text-white">
+                                  {Post.likes.length}{" "}
+                                  {Post.likes.length <= 1 ? "Like" : "Likes"}
+                                </span>
+                                <IconHeartFilled
+                                  color="red"
+                                  className=" cursor-pointer"
+                                  onClick={() =>
+                                    LikePostHandler(Post._id, false)
+                                  }
+                                />
+                              </div>
+                            ) : (
+                              <div className="mr-4 flex gap-2 items-center cursor-pointer dark:text-white font-bold">
+                                <span className="font-bold">
+                                  {Post.likes.length}{" "}
+                                  {Post.likes.length <= 1 ? "Like" : "Likes"}
+                                </span>
+                                <HeartIcon
+                                  className=" cursor-pointer"
+                                  onClick={() =>
+                                    LikePostHandler(Post._id, true)
+                                  }
+                                />
+                              </div>
+                            )}
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

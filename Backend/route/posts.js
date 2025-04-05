@@ -27,6 +27,7 @@ import {
   postHandler,
   getByIdHandler,
   updateHandler,
+  updatelikesHandler,
   deleteHandler,
 } from "../middleWares/Controlers/post.js";
 const router = Router();
@@ -36,6 +37,7 @@ router
   .get("/:id", getByIdHandler)
   .post("/", postHandler)
   .put("/:id", updateHandler)
+  .put("/like/:id", updatelikesHandler)
   .patch("/:id", updateHandler)
   .delete("/:id", deleteHandler);
 

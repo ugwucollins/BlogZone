@@ -2,6 +2,8 @@ import clsx from "clsx";
 import { footerLinks, footerLinks2 } from "../../content/NavMenu";
 import { useState } from "react";
 import { FloatingDockDemo } from "./FloatingDockDemo";
+import { CardsVartiant } from "../ui/apple-cards-carousel";
+import { motion } from "framer-motion";
 // import { LampContainer } from "../ui/lamp";
 
 const FooterContent = () => {
@@ -15,7 +17,7 @@ const FooterContent = () => {
     w-full h-auto py-3 bg-black/95 text-white rounded-xl dark:ring-1 ring-slate-700"
     >
       <div className="flex gap-4 sm:flex-nowrap sm:justify-between justify-center flex-wrap w-full px-3">
-        <div className="w-full sm:w-[40%]">
+        <div className="w-full sm:w-[40%] max-md:w-[80%]">
           <div className="flex items-center w-1/2 max-[820px]:w-full">
             <img
               src="/logo.png"
@@ -24,10 +26,32 @@ const FooterContent = () => {
                 "dark:bg-white size-16 rounded-xl mr-1 max-[300px]:size-8"
               )}
             />
-            <h1 className="flex text-white  whitespace-nowrap max-[200px]:flex-wrap font-bold text-2xl max-[300px]:text-xl">
-              Blog{" "}
-              <span className="font-bold text-2xl max-[300px]:text-xl text-blue-700">
-                Zone
+            <h1 className="flex text-white max-lg:flex-nowrap items-center flex-row flex-wrap md:flex-nowrap font-bold text-2xl max-[300px]:text-xl">
+              {Array.from("Blog").map((text: any, index: any) => (
+                <motion.h1
+                  variants={CardsVartiant(index, 0.2)}
+                  whileInView={"show"}
+                  initial="hidden"
+                  key={index}
+                  viewport={{ once: false, amount: 0.2 }}
+                  className="whitespace-nowrap"
+                >
+                  {text}
+                </motion.h1>
+              ))}
+              <span className="font-bold flex flex-nowrap max-sm:flex-wrap items-center flex-row text-2xl max-lg:flex-nowrap max-[300px]:text-xl text-blue-700">
+                &nbsp;
+                {Array.from("Zone").map((text: any, index: any) => (
+                  <motion.h1
+                    key={index}
+                    variants={CardsVartiant(index, 0.2)}
+                    whileInView={"show"}
+                    initial="hidden"
+                    viewport={{ once: false, amount: 0.2 }}
+                  >
+                    {text}
+                  </motion.h1>
+                ))}
               </span>
             </h1>
           </div>

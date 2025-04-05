@@ -27,6 +27,7 @@ import BloggersDetails from "./component/Admin/Bloggers/BloggersDetails";
 import Layout from "./Layout";
 import UserAdminContext from "./component/Admin/AdminContext/UserAdminContext";
 import AdminDetails from "./component/Admin/Home/AdminDetails";
+import PostIDDetails from "./component/Admin/Posts/PostDetails/PostIDDetails";
 
 const localMode: any = localStorage.getItem("theme");
 export const themeContext = createContext(localMode);
@@ -94,6 +95,10 @@ const App = () => {
                           <Route
                             path={`${AdminUrl}/users/userdetailS/:_id`}
                             element={<UsersDetails />}
+                          />
+                          <Route
+                            path={`${AdminUrl}/users/posts/:_id`}
+                            element={<PostIDDetails />}
                           />
                           <Route
                             path={`${AdminUrl}/bloggers/bloggersdetails/:_id`}

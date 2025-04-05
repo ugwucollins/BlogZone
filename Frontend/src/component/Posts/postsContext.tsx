@@ -72,6 +72,9 @@ export const PostsContext = ({ children }: { children: ReactNode }) => {
       setisloading(true);
       const res = await Api.get("/posts");
       const post = res.data.posts;
+      console.log(res.data);
+      console.log(post);
+
       setPosts(post);
       setTimeout(() => {
         setisloading(false);

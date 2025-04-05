@@ -1,90 +1,74 @@
 import { useEffect, useState } from "react";
-import { usePost } from "../postsContext";
-import Api, { PHOTO_URL } from "../../../Axios/Api";
-import moment from "moment";
-import { Post } from "../../../content/Types";
-import { ImagesIcon, PlusIcon, SendIcon } from "lucide-react";
-import { Button } from "../../../data/Button";
-import clsx from "clsx";
-import { notAuth, UserAuth } from "../../../content/usersContext";
-import { useLocation } from "react-router-dom";
-import { CardsVartiant } from "../../ui/apple-cards-carousel";
-import { motion } from "framer-motion";
-import { toast } from "react-toastify";
-import { BlogZoneLoader } from "../../../content/loading";
 
-const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
+// import { toast } from "react-toastify";
+import moment from "moment";
+// import { Post } from "../../../content/Types";
+import { HeartIcon, ImagesIcon, PlusIcon, SendIcon } from "lucide-react";
+import clsx from "clsx";
+import { useLocation } from "react-router-dom";
+import { Post } from "../../../../content/Types";
+import { notAuth, UserAuth } from "../../../../content/usersContext";
+import { usePost } from "../../../Posts/postsContext";
+import Api from "../../../../Axios/Api";
+import { Button } from "../../../../data/Button";
+import { motion } from "framer-motion";
+import { CardsVartiant } from "../../../ui/apple-cards-carousel";
+import { IconHeartFilled } from "@tabler/icons-react";
+import { toast } from "react-toastify";
+
+const PostDetailsList = ({
+  id,
+  Likes,
+  followers,
+}: {
+  id: string | any;
+  Likes: any;
+  followers: any;
+}) => {
   const { posts }: any = usePost();
 
   const _id = localStorage.getItem("postId");
   const location = useLocation();
-  const eachPost = posts.find((post: any) => post._id === _id);
+  const eachPost = posts.find((post: any) => post._id === _id && _id);
   const [eachUserPost, seteachUserPost] = useState<Post | any>(eachPost);
+  const [imageUrl, setimageUrl] = useState({ file: null, url: "" });
   const [text, settext] = useState("");
-  const [loading, setloading] = useState(false);
   const { user }: any = UserAuth();
 
-  const [imageUrl, setimageUrl] = useState({ file: null, url: "" });
-  const { VITE_REACT_CLOUD_NAME, VITE_REACT_UPLOAD_PRESET_NAME } = import.meta
-    .env;
+  localStorage.setItem("postId", id);
 
-  const onchangeImage = async (event: any) => {
-    const file = event.target.files[0];
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", `${VITE_REACT_UPLOAD_PRESET_NAME}`);
-    data.append("cloud_name", `${VITE_REACT_CLOUD_NAME}`);
-    if (!file) return;
-
-    try {
-      setloading(true);
-      const res = await fetch(PHOTO_URL, {
-        method: "POST",
-        body: data,
-      });
-      const uploadedImage = await res.json();
-      console.log(uploadedImage);
-      setimageUrl({
-        file: uploadedImage,
-        url: uploadedImage.url,
-      });
-      setloading(false);
-    } catch (error: any) {
-      toast.error(`${error.message}`);
-    }
+  const onchangeImage = (e: any) => {
+    const values = e.target.files[0];
+    setimageUrl({
+      file: values,
+      url: URL.createObjectURL(values),
+    });
   };
 
-  localStorage.setItem("postId", id);
-  localStorage.setItem("routerPath", `/PostContent/${id}`);
-
-  const fetchPostById = async () => {
+  const fetchPostId = async () => {
     try {
       const res = await Api.get(`/posts/${_id}`);
       const data = res.data;
       seteachUserPost(data.postsid);
     } catch (error: any) {
       console.log(error);
+      // toast.error("opps! something went wrong, Try again later");
     }
   };
-
-  const FollowUserHandler = async (push: boolean) => {
+  const LikePostHandler = async (push: boolean) => {
     const data = {
       userId: user._id,
-      isFollow: push,
+      islike: push,
     };
+
     try {
-      const res = await Api.put(
-        `/users/follower/${eachUserPost && eachUserPost.createdBy._id}`,
-        data
-      );
+      const res = await Api.put(`/posts/like/${_id}`, data);
       const isLike = res.data;
-      fetchPostById();
       if (isLike.success) {
         toast.success(isLike.message);
       } else {
-        toast.error(isLike.message);
+        toast.warning(isLike.message);
       }
-      seteachUserPost(eachPost);
     } catch (error: any) {
       console.log(error);
       toast.error("opps! something went wrong, Try again later");
@@ -111,7 +95,7 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
       if (data.success) {
         toast.success(data.message);
       }
-      fetchPostById();
+      fetchPostId();
       // setcomment(data.comments);
       seteachUserPost(data.postsid);
     } catch (error: any) {
@@ -120,12 +104,36 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
       // toast.error("opps! something went wrong, Try again later");
     }
   };
-  const [active, setactive] = useState(false);
+  const FollowUserHandler = async (push: boolean) => {
+    const data = {
+      userId: user._id,
+      isFollow: push,
+    };
+    try {
+      const res = await Api.put(
+        `/users/follower/${eachUserPost && eachUserPost.createdBy._id}`,
+        data
+      );
+      const isLike = res.data;
+      fetchPostId();
+      if (isLike.success) {
+        toast.success(isLike.message);
+      } else {
+        toast.error(isLike.message);
+      }
+      seteachUserPost(eachPost);
+    } catch (error: any) {
+      console.log(error);
+      toast.error("opps! something went wrong, Try again later");
+    }
+  };
 
   useEffect(() => {
-    fetchPostById();
+    fetchPostId();
     seteachUserPost(eachPost);
-  }, []);
+  }, [eachPost, eachUserPost, Likes, posts, followers]);
+
+  const [active, setactive] = useState(false);
 
   return (
     <div className="w-full relative my-4 min-h-screen">
@@ -135,7 +143,23 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
             <h1 className="mt-3 text-[min(4rem,21px)] font-medium mb-2 text-black dark:text-white/80 text-wrap">
               {eachUserPost && eachUserPost.title}
             </h1>
-            <img
+
+            <motion.img
+              initial={{
+                scale: 0.1,
+                y: -50,
+                opacity: 0,
+              }}
+              whileInView={{
+                scale: 1,
+                y: 0,
+                opacity: 1,
+              }}
+              transition={{
+                duration: 0.2,
+                delay: 0.1,
+                stiffness: 10,
+              }}
               src={`${eachUserPost && eachUserPost.imageUrl}`}
               alt={eachUserPost && eachUserPost.title}
               className="w-full lg:h-[60vh] h-[50vh] rounded"
@@ -148,7 +172,6 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
             <p className="text-2xl font-medium text-black/70 capitalize dark:text-white/70 mb-1">
               {eachUserPost && eachUserPost.categorate}
             </p>
-
             <p className="dark:text-white/75 items-center text-black flex flex-row flex-wrap">
               {active
                 ? eachUserPost && eachUserPost.postMessage
@@ -158,7 +181,6 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                       eachUserPost.postMessage.slice(0, 1000) + " " + "..."
                   ).map((text: any, index: any) => (
                     <motion.h1
-                      key={index}
                       variants={CardsVartiant(index, 0.01)}
                       whileInView={"show"}
                       initial="hidden"
@@ -169,23 +191,86 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                   ))
                 : eachUserPost && eachUserPost.postMessage}
             </p>
-            <div className="w-full flex justify-end mr-1">
-              <button
-                onClick={() => setactive(!active)}
-                className=" dark:text-black bg-black text-white font-semibold dark:bg-slate-200 px-3 hover:font-bold hover:bg-slate-300 hover:text-black/70 mr-2 dark:hover:bg-slate-500 dark:hover:text-white/90 py-2 rounded-3xl"
-              >
-                {active ? "Read Less" : "Read More"}
-              </button>
+            <div className="w-full flex item-center justify-between flex-row flex-wrap">
+              {Likes ? (
+                <div className="cursor-pointer flex gap-2 flex-row-reverse ml-1 items-center font-bold">
+                  <p className="font-bold flex gap-2 flex-row items-center">
+                    <span className="font-bold  dark:text-white">
+                      {eachUserPost && eachUserPost.likes.length}{" "}
+                    </span>
+                    {eachUserPost && eachUserPost.likes.length <= 1
+                      ? "Like"
+                      : "Likes"}
+                  </p>
+                  <IconHeartFilled
+                    color="red"
+                    className=" cursor-pointer"
+                    onClick={() => LikePostHandler(false)}
+                  />
+                </div>
+              ) : (
+                <div className="cursor-pointer flex gap-2 flex-row-reverse ml-1 items-center dark:text-white font-bold">
+                  <p className="font-bold flex gap-2 flex-row items-center">
+                    <span className="font-bold">
+                      {eachUserPost && eachUserPost.likes.length}{" "}
+                    </span>
+                    {eachUserPost && eachUserPost.likes.length <= 1
+                      ? "Like"
+                      : "Likes"}
+                  </p>
+                  <HeartIcon onClick={() => LikePostHandler(true)} />
+                </div>
+              )}
+
+              {/* {!CheckPostLike(eachUserPost && eachUserPost?.likes) ? (
+                <div className="cursor-pointer flex gap-2 flex-row-reverse ml-1 items-center dark:text-white font-bold">
+                  <p className="font-bold flex gap-2 flex-row items-center">
+                    <span className="font-bold">
+                      {eachUserPost && eachUserPost.likes.length}{" "}
+                    </span>
+                    {eachUserPost && eachUserPost.likes.length <= 1
+                      ? "Like"
+                      : "Likes"}
+                  </p>
+                  <HeartIcon onClick={() => LikePostHandler(true)} />
+                </div>
+              ) : (
+                <div className="cursor-pointer flex gap-2 flex-row-reverse ml-1 items-center font-bold">
+                  <p className="font-bold flex gap-2 flex-row items-center">
+                    <span className="font-bold  dark:text-white">
+                      {eachUserPost && eachUserPost.likes.length}{" "}
+                    </span>
+                    {eachUserPost && eachUserPost.likes.length <= 1
+                      ? "Like"
+                      : "Likes"}
+                  </p>
+                  <IconHeartFilled
+                    color="red"
+                    className=" cursor-pointer"
+                    onClick={() => LikePostHandler(false)}
+                  />
+                </div>
+              )} */}
+
+              <div className="mr-1 ">
+                <button
+                  onClick={() => setactive(!active)}
+                  className=" dark:text-black bg-black text-white font-semibold dark:bg-slate-200 px-3 hover:font-bold hover:bg-slate-300 hover:text-black/70 mr-2 dark:hover:bg-slate-500 dark:hover:text-white/90 py-2 rounded-3xl"
+                >
+                  {active ? "Read Less" : "Read More"}
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="max-[680px]:w-full border rounded-lg drop-shadow w-1/2 lg:w-1/2 min-h-screen mx-1">
+          <div className="max-[680px]:w-full max-[680px]:mt-5 border rounded-lg drop-shadow w-1/2 lg:w-1/2 min-h-screen mx-1">
             <div className="ml-4">
               <div className="flex items-center justify-between mr-2">
                 <div className="flex items-center mt-5  mb-2 gap-2">
                   <img
                     src={`${
-                      eachUserPost && eachUserPost.createdBy.imageUrl.url
+                      (eachUserPost && eachUserPost.createdBy.imageUrl.url) ||
+                      eachUserPost.createdBy.imageUrl.secure_url
                     }`}
                     alt={eachUserPost && eachUserPost.createdBy.lastName}
                     className="size-14 rounded-full"
@@ -197,13 +282,14 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                         eachUserPost.createdBy.lastName}
                   </h1>
                 </div>
-
                 <h1 className="text-gray-800/90 dark:text-gray-300/95 font-medium flex flex-row items-center flex-wrap">
                   <span className="font-bold">
-                    {eachUserPost && eachUserPost.createdBy.followers.length}{" "}
+                    {eachUserPost.createdBy &&
+                      eachUserPost.createdBy.followers.length}{" "}
                     &nbsp;
                   </span>
-                  {eachUserPost && eachUserPost.createdBy.followers.length <= 1
+                  {eachUserPost.createdBy &&
+                  eachUserPost.createdBy.followers.length <= 1
                     ? "follower"
                     : "followers"}
                 </h1>
@@ -240,15 +326,12 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                   />
                 </>
               )}
-
               <p className="mt-1 mb-2 text-black dark:text-white/80 capitalize">
                 {eachUserPost && eachUserPost.categorate}
               </p>
 
-              <div className="drop-shadow-lg right-1 mt-3 py-3 px-2 h-auto rounded-md mr-1 bg-slate-50">
-                {imageUrl && loading ? (
-                  <BlogZoneLoader />
-                ) : (
+              <div className="drop-shadow-lg dark:text-black right-1 mt-3 py-3 px-2 h-auto rounded-md mr-1 bg-slate-50">
+                {imageUrl && (
                   <img
                     src={imageUrl && imageUrl.url}
                     className={clsx(
@@ -270,8 +353,6 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
 
                 <div className="flex gap-2 justify-between mt-2 items-center">
                   <div className="flex items-center gap-2 cursor-pointer w-full">
-                    {/* <LucideThumbsUp />
-                    <HeartIcon /> */}
                     <div>
                       <label htmlFor="image">
                         <ImagesIcon />
@@ -288,7 +369,6 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                   <div>
                     {user ? (
                       <button
-                        disabled={!text}
                         onClick={saveComment}
                         className=" mt-2 flex items-center bg-black text-white  hover:font-medium py-2 px-2 rounded-md gap-1 whitespace-nowrap"
                         type="submit"
@@ -364,4 +444,4 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
   );
 };
 
-export default PostItems;
+export default PostDetailsList;

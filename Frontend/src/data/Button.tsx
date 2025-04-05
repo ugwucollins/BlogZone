@@ -1,9 +1,15 @@
 import { ButtonType } from "../content/Types";
 import clsx from "clsx";
 
-export const Button = ({ title, Icon, className, style }: ButtonType) => {
+export const Button = ({
+  title,
+  Icon,
+  className,
+  style,
+  onClick,
+}: ButtonType) => {
   return (
-    <div className={style}>
+    <div className={style} onClick={onClick}>
       <div className="w-full h-auto">
         <div
           className="

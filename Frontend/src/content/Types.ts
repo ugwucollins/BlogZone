@@ -35,6 +35,7 @@ export type ButtonType = {
   className?: string;
   style?: string;
   Icon: ReactElement;
+  onClick?:() => void;
 };
 
 export type SocialIcons = {

@@ -43,7 +43,7 @@ export function AuroraBackgroundDemo() {
           ))}
         </div>
         <div className="text-base md:text-xl dark:text-neutral-300 mb-5">
-          Let us know how we &nbsp; can help you
+          Let us know how we can help you
         </div>
 
         <div className="mt-7">
@@ -103,7 +103,18 @@ export const ContactForm = ({ setOpen }: any) => {
         }}
       >
         <div className="md:max-w-[600px] max-w-lg w-full mx-auto rounded-xl md:rounded-2xl mt-20 p-4 md:p-8 shadow-lg bg-white dark:bg-black">
-          <h1 className="mt-2 mb-4 text-xl font-semibold">Our Contact</h1>
+          <h1 className="mt-2 mb-4 text-xl font-semibold flex flex-row flex-wrap w-full item-center text-center justify-center">
+            {Array.from("Our Contact").map((text: any, index: any) => (
+              <motion.h1
+                variants={CardsVartiant(index, 0.2)}
+                whileInView={"show"}
+                initial="hidden"
+                viewport={{ once: false, amount: 0.2 }}
+              >
+                {text === " " ? `\u00A0` : text}
+              </motion.h1>
+            ))}
+          </h1>
 
           <form className="my-8 text-left" onSubmit={handleSubmit}>
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">

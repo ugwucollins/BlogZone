@@ -32,15 +32,27 @@ import {
   useState,
 } from "react";
 import { toast } from "react-toastify";
+import Api from "../../../Axios/Api";
 
 export const commentCreateContext = createContext({});
 
 export const CommentContext = ({ children }: { children: ReactNode }) => {
   const [comment, setcomment] = useState([]);
 
+  // comments
+  const fetchUComments = async () => {
+    try {
+      const res = await Api.get(`/comments`);
+      const data = res.data;
+      setcomment(data.comment);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    // console.log(comment);
-  }, [comment]);
+    fetchUComments();
+  }, []);
 
   return (
     <commentCreateContext.Provider value={{ comment, setcomment }}>

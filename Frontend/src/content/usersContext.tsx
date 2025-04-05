@@ -42,9 +42,8 @@ const UsersContextProvider = ({ children }: { children: ReactNode }) => {
   const [userRole, setUserRole] = useState("");
   const router = useNavigate();
 
-
   const [routerPath, setrouterPath] = useState<string | null>(
-    localStorage.getItem("routerPath") || "/Dashboard"
+    localStorage.getItem("routerPath") || "/"
   );
 
   const fetchUserApi = async () => {

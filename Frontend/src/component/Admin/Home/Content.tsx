@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { GetTotalUsers } from "../AdminContext/UserAdminContext";
 import { usePost } from "../../Posts/postsContext";
+import { CardsVartiant } from "../../ui/apple-cards-carousel";
 
 const Content = () => {
   const { AllUsers }: any = GetTotalUsers();
@@ -50,9 +51,13 @@ const Cards = ({ CardItems }: any) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, delay: 0.2, delayChildren: 0.1 }}
       >
-        <div className="flex justify-center mb-4 md:justify-start flex-wrap flex-row gap-4 lg:gap-5 items-center w-full">
-          {CardItems.map((CardItem: any) => (
-            <div
+        <div className="flex justify-center mb-4 lg:justify-start flex-wrap flex-row gap-4 lg:gap-5 items-center w-full max-[825px]:justify-center">
+          {CardItems.map((CardItem: any, index: any) => (
+            <motion.div
+              variants={CardsVartiant(index, 0.6)}
+              whileInView={"show"}
+              initial="hidden"
+              viewport={{ once: false, amount: 0.25 }}
               className="max-[396px]:w-full max-[396px]:min-w-full min-w-[310px] rounded-2xl shadow-slate-700 dark:shadow-neutral-300 drop-shadow-xl text-black shadow-md dark:text-white bg-white dark:bg-black/50 mb-2 py-5 px-2"
               key={CardItem.title}
             >
@@ -69,7 +74,7 @@ const Cards = ({ CardItems }: any) => {
                   {CardItem.legnth}
                 </p>
               </Link>
-            </div>
+            </motion.div>
           ))}
         </div>
       </motion.div>

@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import "dotenv/config";
 
 const { JSONKEY } = process.env;
+
 export const themehandler = async (req, res) => {
   const { id } = req.params;
   const { theme } = req.body;
@@ -34,7 +35,7 @@ export const themehandler = async (req, res) => {
 };
 export const getHandler = async (req, res) => {
   try {
-    const response = await UserModels.find({});
+    const response = await UserModels.find({}).populate("followers");
     if (response.length === 0) {
       res.status(404).json({ message: "Users not Found and Empty Collection" });
     } else {
@@ -67,7 +68,6 @@ export const postHandlerSignUp = async (req, res, next) => {
         lastName: lastName,
         imageUrl: imageUrl,
       };
-  
 
       const newUser = await UserModels.create(data);
       const users = await newUser.save();
@@ -216,6 +216,47 @@ export const updateHandler = async (req, res, next) => {
     const err = "Error! Something went wrong.";
     console.log(error);
     res.status(501).json({ message: err, success: false });
+  }
+};
+
+export const updateFollowersHandler = async (req, res, next) => {
+  const { id } = req.params;
+  const { userId, isFollow } = req.body;
+  const data = {
+    userId: userId,
+    isFollow: isFollow,
+  };
+  try {
+    const response = await UserModels.findById({ _id: id });
+
+    if (!response.followers) {
+      const updateLikes = await UserModels.findByIdAndUpdate(
+        { _id: id },
+        { followers: [] },
+        { upsert: true, runValidators: true }
+      );
+
+      const result = await updateLikes.save();
+      res.status(201).json({
+        message: "User follower Not Updated",
+        success: false,
+        data: result,
+      });
+    }
+
+    const updatePostLikes = await UserModels.findById({ _id: id });
+    data.isFollow
+      ? updatePostLikes.followers.push(data.userId)
+      : updatePostLikes.followers.pop(data.userId);
+    const result = await updatePostLikes.save();
+    res.status(200).json({
+      message: "User Has been followed",
+      post: result,
+      success: true,
+    });
+  } catch (error) {
+    const err = new Error("User not found");
+    next(err);
   }
 };
 

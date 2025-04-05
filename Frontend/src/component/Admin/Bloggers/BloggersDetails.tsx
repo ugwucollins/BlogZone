@@ -182,7 +182,7 @@ export function BlggerDetailEdite({ id }: { id: string | undefined }) {
           <div className="flex gap-2 max-[350px]:flex-wrap flex-row items-center w-full">
             <button className="bg-gradient-to-br relative group/btn from-red-700 dark:from-red-500 dark:to-red-500 to-red-700 block dark:bg-zinc-800 w-full text-white dark:text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset] hover:animate-pulse">
               <Link
-                to={AdminUrl + "/users"}
+                to={AdminUrl + "/bloggers"}
                 className="w-full absolute rounded top-0 py-2 left-0"
               >
                 Cancel

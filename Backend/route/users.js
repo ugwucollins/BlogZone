@@ -7,6 +7,7 @@ import {
   updateHandler,
   roleUpdateHandler,
   themehandler,
+  updateFollowersHandler,
   deleteHandler,
 } from "../middleWares/Controlers/user.js";
 // import MongodbConnecton from "./mongosh.js";
@@ -21,6 +22,7 @@ router
   .post("/signUp", postHandlerSignUp)
   .put("/:id", updateHandler)
   .put("/theme/:id", themehandler)
+  .put("/follower/:id", updateFollowersHandler)
   .patch("/:id", updateHandler)
   .put("/role/:email", roleUpdateHandler)
   .patch("/role/:email", roleUpdateHandler)

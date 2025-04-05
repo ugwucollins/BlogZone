@@ -54,13 +54,12 @@ const PostList = () => {
       setfilteredPosts(filterPosts(posts, categorates));
     }
   }, [categorates, posts, search, sort]);
-  console.log(posts);
 
   return (
     <motion.div
-      initial={{ y: 80, opacity: 0 }}
+      initial={{ y: 85, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1.5, delay: 0.5 }}
+      transition={{ duration: 1.2, delay: 0.6 }}
     >
       <div className="mx-2  my-5 w-full h-auto">
         <Link to={`${AdminUrl}/posts/createPost`}>
@@ -145,9 +144,25 @@ const PostList = () => {
                       {moment(Post.createdDate).format("Do MMM YYYY, h:mm a")}
                     </p>
 
-                    <Link to={`${AdminUrl}/posts/postcontent/${Post._id}`}>
+                    <Link
+                      to={`${AdminUrl}/users/posts/${Post._id}`}
+                      className="lg:hidden block"
+                    >
                       <h2 className="font-semibold hover:underline mt-1 duration-300 text-black transition text-xl hover:font-bold dark:text-white">
-                        {Post.title}
+                        {Post.title.length >= 50
+                          ? Post.title.slice(0, 50) + " " + "..."
+                          : Post.title}
+                      </h2>
+                    </Link>
+
+                    <Link
+                      to={`${AdminUrl}/users/posts/${Post._id}`}
+                      className="md:hidden lg:block hidden"
+                    >
+                      <h2 className="font-semibold hover:underline mt-1 duration-300 text-black transition text-xl hover:font-bold dark:text-white">
+                        {Post.title.length >= 30
+                          ? Post.title.slice(0, 30) + " " + "..."
+                          : Post.title}
                       </h2>
                     </Link>
 
