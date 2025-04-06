@@ -38,7 +38,7 @@ export const AnimatedTestimonials = ({
   const isActive = (index: number) => {
     return index === active;
   };
-  const date = moment(1732045059907).format("MMMM Do YYYY, h:mm:ss a");
+  // const date = moment(1732045059907).format("MMMM Do YYYY, h:mm:ss a");
 
   useEffect(() => {
     const interval = setInterval(handleNext, 10000);

@@ -81,6 +81,7 @@ export function UserDetailsEdit({ users, deleteusers }: any) {
       const alert = () => toast.error(error.response.data.message);
       alert();
     }
+    setimageUrl;
   };
   const HandleDelete = async () => {
     try {

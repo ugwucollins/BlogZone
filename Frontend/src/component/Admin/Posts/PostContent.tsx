@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Footer from "../../footer/Footer";
 import Adminnavbar from "../../navbar/Adminnavbar";
 import { motion } from "framer-motion";

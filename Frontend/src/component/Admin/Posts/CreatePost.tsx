@@ -16,7 +16,6 @@ import { useNavigate } from "react-router";
 import { AdminUrl } from "../../../content/Types";
 import BackButton from "../../../data/BackButton";
 import { BlogZoneLoader } from "../../../content/loading";
-import axios from "axios";
 
 const CreatePost = () => {
   const { user }: any = UserAuth();

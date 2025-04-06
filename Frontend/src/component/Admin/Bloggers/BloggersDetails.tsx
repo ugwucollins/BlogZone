@@ -79,6 +79,7 @@ export function BlggerDetailEdite({ id }: { id: string | undefined }) {
       const alert = () => toast.error(error.response.data.message);
       alert();
     }
+    setimageUrl;
   };
 
   return (

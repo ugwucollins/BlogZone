@@ -79,6 +79,7 @@ export const ContactForm = ({ setOpen }: any) => {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | any) => {
     e.preventDefault();
+    setformerr;
   };
 
   return (
