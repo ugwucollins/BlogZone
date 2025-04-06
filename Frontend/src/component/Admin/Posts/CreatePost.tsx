@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 import { AdminUrl } from "../../../content/Types";
 import BackButton from "../../../data/BackButton";
 import { BlogZoneLoader } from "../../../content/loading";
+import axios from "axios";
 
 const CreatePost = () => {
   const { user }: any = UserAuth();
@@ -78,6 +79,7 @@ const CreatePosts = () => {
       toast.error(`${error.message}`);
     }
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | any) => {
     e.preventDefault();
     const formData = new FormData(e.target);

@@ -25,7 +25,6 @@ export const getHandler = async (req, res, next) => {
       return res.status(404).json({ message: "Empty Post Collection" });
     }
     const posts = { posts: AllPost };
-    console.log(AllPost);
     return res.status(200).json(posts);
   } catch (error) {
     console.log(error);

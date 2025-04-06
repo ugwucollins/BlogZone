@@ -181,8 +181,8 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
 
           <div className="max-[680px]:w-full border rounded-lg drop-shadow w-1/2 lg:w-1/2 min-h-screen mx-1">
             <div className="ml-4">
-              <div className="flex items-center justify-between mr-2">
-                <div className="flex items-center mt-5  mb-2 gap-2">
+              <div className="flex items-center flex-row flex-wrap gap-2 justify-between mr-2">
+                <div className="flex flex-row flex-wrap items-center mt-5  mb-2 gap-2">
                   <img
                     src={`${
                       eachUserPost && eachUserPost.createdBy.imageUrl.url
@@ -241,11 +241,11 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                 </>
               )}
 
-              <p className="mt-1 mb-2 text-black dark:text-white/80 capitalize">
+              {/* <p className="mt-1 mb-2 text-black dark:text-white/80 capitalize">
                 {eachUserPost && eachUserPost.categorate}
-              </p>
+              </p> */}
 
-              <div className="drop-shadow-lg right-1 mt-3 py-3 px-2 h-auto rounded-md mr-1 bg-slate-50">
+              <div className="mt-5 drop-shadow-lg right-1 py-3 px-2 h-auto rounded-md mr-1 bg-slate-50">
                 {imageUrl && loading ? (
                   <BlogZoneLoader />
                 ) : (
@@ -268,7 +268,7 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                   mt-1
                 />
 
-                <div className="flex gap-2 justify-between mt-2 items-center">
+                <div className="flex w-full flex-row max-[200px]:flex-wrap gap-2 justify-between  mt-2 items-center">
                   <div className="flex items-center gap-2 cursor-pointer w-full">
                     {/* <LucideThumbsUp />
                     <HeartIcon /> */}
@@ -285,12 +285,12 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="w-full flex justify-end">
                     {user ? (
                       <button
                         disabled={!text}
                         onClick={saveComment}
-                        className=" mt-2 flex items-center bg-black text-white  hover:font-medium py-2 px-2 rounded-md gap-1 whitespace-nowrap"
+                        className=" mt-2 flex items-center bg-black text-white flex-row flex-wrap hover:font-medium py-2 px-2 rounded-md gap-1 whitespace-nowrap"
                         type="submit"
                       >
                         Send <SendIcon size={14} />
@@ -298,7 +298,7 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                     ) : (
                       <button
                         onClick={() => notAuth(location)}
-                        className=" mt-2 flex items-center bg-black text-white  hover:font-medium py-2 px-2 rounded-md gap-1 whitespace-nowrap"
+                        className=" mt-2 flex items-center bg-black text-white flex-row flex-wrap hover:font-medium py-2 px-2 rounded-md gap-1 whitespace-nowrap"
                         type="submit"
                       >
                         Send <SendIcon size={14} />
@@ -311,7 +311,7 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
               <div className="w-[97%] h-[1px] bg-gray-900 dark:bg-gray-300/90  my-6" />
 
               <div>
-                <h1 className="mb-3 text-black dark:text-white/70 font-medium text-xl capitalize">
+                <h1 className="mb-3 text-black dark:text-white/70 font-medium text-xl w-[100vw] capitalize">
                   comment
                 </h1>
                 {eachUserPost &&
@@ -355,6 +355,11 @@ const PostItems = ({ id, followers }: { id: string | any; followers: any }) => {
                       </div>
                     </div>
                   ))}
+                {eachUserPost && eachUserPost.comment.length === 0 && (
+                  <h1 className="w-full text-center font-semibold dark:text-white/50 mt-20 animate-pulse">
+                    No Comment
+                  </h1>
+                )}
               </div>
             </div>
           </div>

@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 
-// import { toast } from "react-toastify";
 import moment from "moment";
-// import { Post } from "../../../content/Types";
 import { HeartIcon, ImagesIcon, PlusIcon, SendIcon } from "lucide-react";
 import clsx from "clsx";
 import { useLocation } from "react-router-dom";
@@ -191,7 +189,7 @@ const PostDetailsList = ({
                   ))
                 : eachUserPost && eachUserPost.postMessage}
             </p>
-            <div className="w-full flex item-center justify-between flex-row flex-wrap">
+            <div className="w-full flex item-center justify-between flex-row flex-wrap gap-2">
               {Likes ? (
                 <div className="cursor-pointer flex gap-2 flex-row-reverse ml-1 items-center font-bold">
                   <p className="font-bold flex gap-2 flex-row items-center">
@@ -265,7 +263,7 @@ const PostDetailsList = ({
 
           <div className="max-[680px]:w-full max-[680px]:mt-5 border rounded-lg drop-shadow w-1/2 lg:w-1/2 min-h-screen mx-1">
             <div className="ml-4">
-              <div className="flex items-center justify-between mr-2">
+              <div className="flex items-center flex-row flex-wrap justify-between mr-2">
                 <div className="flex items-center mt-5  mb-2 gap-2">
                   <img
                     src={`${
@@ -326,9 +324,9 @@ const PostDetailsList = ({
                   />
                 </>
               )}
-              <p className="mt-1 mb-2 text-black dark:text-white/80 capitalize">
+              {/* <p className="mt-1 mb-2 text-black dark:text-white/80 capitalize">
                 {eachUserPost && eachUserPost.categorate}
-              </p>
+              </p> */}
 
               <div className="drop-shadow-lg dark:text-black right-1 mt-3 py-3 px-2 h-auto rounded-md mr-1 bg-slate-50">
                 {imageUrl && (
@@ -351,7 +349,7 @@ const PostDetailsList = ({
                   mt-1
                 />
 
-                <div className="flex gap-2 justify-between mt-2 items-center">
+                <div className="flex gap-2 flex-row max-[200px]:flex-wrap justify-between mt-2 items-center">
                   <div className="flex items-center gap-2 cursor-pointer w-full">
                     <div>
                       <label htmlFor="image">
@@ -366,11 +364,11 @@ const PostDetailsList = ({
                     </div>
                   </div>
 
-                  <div>
+                  <div className="flex justify-end w-full">
                     {user ? (
                       <button
                         onClick={saveComment}
-                        className=" mt-2 flex items-center bg-black text-white  hover:font-medium py-2 px-2 rounded-md gap-1 whitespace-nowrap"
+                        className=" mt-2 flex-row flex-wrap flex items-center bg-black text-white  hover:font-medium py-2 px-2 rounded-md gap-1 whitespace-nowrap"
                         type="submit"
                       >
                         Send <SendIcon size={14} />
@@ -378,7 +376,7 @@ const PostDetailsList = ({
                     ) : (
                       <button
                         onClick={() => notAuth(location)}
-                        className=" mt-2 flex items-center bg-black text-white  hover:font-medium py-2 px-2 rounded-md gap-1 whitespace-nowrap"
+                        className=" mt-2 flex-row flex-wrap flex items-center bg-black text-white  hover:font-medium py-2 px-2 rounded-md gap-1 whitespace-nowrap"
                         type="submit"
                       >
                         Send <SendIcon size={14} />
@@ -391,7 +389,7 @@ const PostDetailsList = ({
               <div className="w-[97%] h-[1px] bg-gray-900 dark:bg-gray-300/90  my-6" />
 
               <div>
-                <h1 className="mb-3 text-black dark:text-white/70 font-medium text-xl capitalize">
+                <h1 className="mb-3 w-[100vw] text-black dark:text-white/70 font-medium text-xl capitalize">
                   comment
                 </h1>
                 {eachUserPost &&
@@ -435,6 +433,11 @@ const PostDetailsList = ({
                       </div>
                     </div>
                   ))}
+                {eachUserPost && eachUserPost.comment.length === 0 && (
+                  <h1 className="w-full text-center font-semibold dark:text-white/50 mt-20 animate-pulse">
+                    No Comment
+                  </h1>
+                )}
               </div>
             </div>
           </div>
