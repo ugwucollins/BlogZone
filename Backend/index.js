@@ -21,7 +21,7 @@ app.use(cors());
 app.use(
   cors({
     // origin: ["https://mern-project-i2s18ud4f-movie-lands-projects.vercel.app"],
-    origin: ["http://localhost:5173"],
+    origin: ["https://blog-zone-eight.vercel.app"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
