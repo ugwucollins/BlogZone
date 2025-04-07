@@ -4,8 +4,7 @@ import axios from "axios";
 const { VITE_REACT_CLOUD_NAME } = import.meta.env;
 
 const Api = axios.create({
-  // baseURL: "https://mern-project-422f.vercel.app/api",
-  baseURL: "http://localhost:3001/api/auth",
+  baseURL: "https://vercel.com/movie-lands-projects/blog-zone-api/api/auth",
 });
 
 export default Api;
